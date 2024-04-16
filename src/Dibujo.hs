@@ -1,4 +1,4 @@
-module Dibujo (encimar, 
+module Dibujo ( 
     Dibujo,
     figura, rotar, espejar, rot45, apilar, juntar, encimar,
     r180, r270,
@@ -30,7 +30,7 @@ comp :: Int -> (a -> a) -> a -> a
 comp i f f' 
     |i== 0 = f' 
     |i <0 = error "no se puede componer"
-    |i >0 = comp f(i-1) $ f'  
+    |i >0 = comp (i-1) f $ f'  
 
 
 -- Funciones constructoras
@@ -89,7 +89,7 @@ ciclar f = cuarteto f (rotar f) (r180 f) (r270 f ) -- para todos es lo mismo cre
 
 -- map para nuestro lenguaje
 mapDib :: (a -> b) -> Dibujo a -> Dibujo b
-mapDib f (Figura x) = f x
+mapDib f (Figura x) = Figura (f x)
 mapDib f (Rotar d) = Rotar (mapDib f d)
 mapDib f (Espejar d) = Espejar (mapDib f d)
 mapDib f (Rot45 d) = Rot45 (mapDib f d)
@@ -102,7 +102,7 @@ mapDib f (Encimar d1 d2) = Encimar (mapDib f d1) (mapDib f d2)
 
 -- Cambiar todas las básicas de acuerdo a la función.
 change :: (a -> Dibujo b) -> Dibujo a -> Dibujo b
-change f a = mapDib f a  
+change f = mapDib (\x -> case f x of Figura y -> y)
 
 -- Principio de recursión para Dibujos.
 foldDib ::
@@ -126,5 +126,5 @@ foldDib f r es r45 a j en d  = case d of
 
 -- Junta todas las figuras básicas de un dibujo.
 -- mi idea seria tomar todas las figuras basicas recursivamente para ir metiendolas en un array
-figuras :: Dibujo a -> [Dibujo a] 
-figuras = foldDib (\x -> [x]) id id id (\_ _ x y -> x ++ y) ++ (\_ _ x y -> x ++ y) ++ (\x y -> x ++ y)
+figuras :: Dibujo a -> [a] 
+figuras = foldDib (\x -> [x]) id id id (\_ _ x y -> x ++ y) (\_ _ x y -> x ++ y) (++)
