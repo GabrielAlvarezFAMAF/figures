@@ -4,7 +4,7 @@ module Interp
   )
 where
 
-import Dibujo
+import Dibujo {-(Dibujo, foldDib)-} 
 import FloatingPic
 import Graphics.Gloss (Display (InWindow), color, display, makeColorI, pictures, translate, white, Picture)
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V
@@ -23,26 +23,34 @@ initial (Conf n dib intBas) size = display win white $ withGrid fig size
     grey = makeColorI 100 100 100 100
 
 -- Interpretación de (^^^)
-ov :: Picture -> Picture -> Picture
-ov p q = undefined
+ov :: Picture -> Picture -> Picture -- ov de overlap
+ov p q = pictures [p, q] -- Funcion de gloss para superponer todas las pictures de un array
 
 r45 :: FloatingPic -> FloatingPic
-r45 = undefined
+r45 f d w h = f (d V.+ half (w V.+ h)) (half(w V.+h)) (half (h V.- w))
 
 rot :: FloatingPic -> FloatingPic
-rot = undefined
+rot f d w h = f (d V.+ w) h (V.negate w)
 
 esp :: FloatingPic -> FloatingPic
-esp = undefined
+esp f d w h = f (d V.+ w) (V.negate w) h 
 
-sup :: FloatingPic -> FloatingPic -> FloatingPic
-sup = undefined
+sup :: FloatingPic -> FloatingPic -> FloatingPic 
+sup f g d w h = pictures [f d w h, g d w h]
 
 jun :: Float -> Float -> FloatingPic -> FloatingPic -> FloatingPic
-jun = undefined
+jun x y f g d w h = ov (f d w' h) (g (d V.+ w') (r' V.* w) h)
+  where
+    r' = y / (x + y)
+    r = x / (x + y)
+    w' = r V.* w
 
 api :: Float -> Float -> FloatingPic -> FloatingPic -> FloatingPic
-api = undefined
-
+api x y f g d w h = ov (f (d V.+ h') w (r V.* h)) (g d w h')
+  where
+    r = x/(x + y)
+    h' = r' V.* h
+    r' = y/(x + y)
+    
 interp :: Output a -> Output (Dibujo a)
-interp b = undefined
+interp b = foldDib b r45 rot esp api jun sup
