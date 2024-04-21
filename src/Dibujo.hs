@@ -1,6 +1,6 @@
 module Dibujo ( 
     Dibujo,
-    figura, rotar, espejar, rot45, apilar, juntar, encimar,
+    figura, rotar, espejar, rot45, apilar, juntar, encimar, r90,
     r180, r270,
     (.-.), (///), (^^^),
     cuarteto, encimar4, ciclar, change,
@@ -29,7 +29,7 @@ infixr 8 ///
 comp :: Int -> (a -> a) -> a -> a
 comp i f 
     |i== 0 = id 
-    |i <0 = error "no se puede componer"
+    {--|i <0 = error "no se puede componer"--}
     |i >0 = f . (comp (i-1) f)
 
 
