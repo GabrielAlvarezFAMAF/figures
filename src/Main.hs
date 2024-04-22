@@ -3,6 +3,7 @@ module Main (main) where
 ---import Dibujos.Ejemplo (ejemploConf)
 import Dibujos.Feo (feoConf)
 ---import Dibujos.Cuadrados(cuadConf)
+import Dibujos.Escher(escherConf)
 import Dibujos.Grilla (grillaConf)
 import FloatingPic (Conf (..))
 import Interp (initial)
@@ -14,7 +15,7 @@ import InterpSVG (ConfSVG, initialSVG', simpleSVG)
 
 -- Lista de configuraciones de los dibujos
 configs :: [Conf]
-configs = [grillaConf, feoConf]
+configs = [grillaConf, feoConf, escherConf]
 
 configsH :: [ConfH]
 configsH = map (\(Conf n p _) -> simpleHaha n p) configs
@@ -39,9 +40,16 @@ main = do
   when (length args > 2 || null args) $ do
     putStrLn "Sólo puede elegir un dibujo. Para ver los dibujos use -l ."
     exitFailure
-  when (head args == "-l") $ do
+  when (head args == "lista") $ do
     putStrLn "Los dibujos disponibles son:"
     mapM_ (putStrLn . name) configs
+    putStrLn "¿Cual desea abrir?"
+    option <- getLine
+    if (option == "Feo" || option == "Grilla" || option == "Escher")
+      then 
+        initial' configs $ option
+      else
+        initial' [] option
     exitSuccess
   when (head args == "-a" && not (null $ tail args)) $ do
     initialH' configsH (args!!1) 

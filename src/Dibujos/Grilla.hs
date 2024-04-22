@@ -4,19 +4,17 @@ module Dibujos.Grilla (
 ) where
 
 import Dibujo (Dibujo, juntar, apilar, figura)
-import FloatingPic(Conf(..), Output, half, zero, vacia)
-import Graphics.Gloss (Picture, Vector, blank, line, pictures, rotate, translate, text, scale)
+import FloatingPic(Conf(..), Output)
+import Graphics.Gloss (Picture, pictures, translate, text, scale)
 
 type Pair = (Int, Int)
-
--- drawPair :: Pair -> Picture
--- drawPair (x, y) = text $ show (x, y)  
-
+--(fromIntegral y * 50) (fromIntegral x * 50)
 drawNumber :: Pair -> Picture
-drawNumber (x, y) = translate (fromIntegral y * 100) (fromIntegral (7 - x) * 100) $ scale 0.1 0.1 (text $ show (x, y)) 
+drawNumber (x, y) = translate (fromIntegral y * 105) (fromIntegral x * 105) $ scale 0.2 0.2 (text $ show (x, y))
+
 
 drawPair :: Picture
-drawPair =  translate (5) 40 $ pictures [drawNumber (x, y) | x <- [0..7], y <- [0..7]]
+drawPair =  translate 0 0 $ pictures [drawNumber (x, y) | x <- [0..7], y <- [0..7]]
 
 row :: [Dibujo a] -> Dibujo a
 row [] = error "row: no puede ser vacío"
@@ -39,8 +37,10 @@ testAll = grilla [[figura drawPair]]
 
 grillaConf :: Conf
 grillaConf = Conf {
-    name = "grilla"
+    name = "Grilla"
     , pic = testAll
     , bas = interBasGrilla
 }
+
+
 
