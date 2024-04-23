@@ -1,9 +1,10 @@
 module Pred (
   Pred,
-  cambiar, anyDib, allDib, orP, andP, --falla
+  cambiar, anyDib, allDib, orP, andP --falla
 ) where
 
-import Dibujo
+import Dibujo (Dibujo, figura, foldDib, change)
+
 type Pred a = a -> Bool
 
 -- Dado un predicado sobre básicas, cambiar todas las que satisfacen
